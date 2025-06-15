@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartu Ucapan Selamat Pagi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e1f5fe, #bbdefb);
+        }
+
+        #chat-container {
+            width: 90%;
+            max-width: 400px;
+            height: 80vh;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background-color: #64b5f6;
+            color: white;
+            text-align: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #e3f2fd;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 18px;
+            max-width: 80%;
+        }
+
+        .message.bot {
+            background-color: #bbdefb;
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background-color: #c8e6c9;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #f0f0f0;
+            background-color: #fff;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        #send-button {
+            padding: 12px 20px;
+            background-color: #64b5f6;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #card-container {
+            width: 90%;
+            max-width: 400px;
+            height: 80vh;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 15px;
+            background-color: #64b5f6;
+            color: white;
+            text-align: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .card-content {
+            flex: 1;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #e3f2fd;
+        }
+
+        .card-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #bbdefb;
+            margin-bottom: 25px;
+        }
+
+        .card-message {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            color: #212121;
+        }
+
+        #back-to-chat {
+            padding: 15px;
+            background-color: #64b5f6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div class="chat-header">
+            <h2>Obrolan Pagi</h2>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                <p>Hai! Ketik "selamat pagi" untuk membuka kartu spesial.</p>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Ketik pesan Anda...">
+            <button id="send-button">Kirim</button>
+        </div>
+    </div>
+
+    <div id="card-container">
+        <div class="chat-header">
+            <h2>Ucapan Pagi Romantis</h2>
+        </div>
+        <div class="card-content">
+            <img class="card-image" src="data:image/jpeg;base64,INSERT_BASE64_ENCODED_IMAGE_HERE" alt="Foto Pasangan">
+            <p class="card-message">Bangunlah sayang, matahari telah bersinar cerah. Seperti senyummu yang selalu menerangi hari-hariku. Semoga pagimu seindah hatimu! 😊</p>
+            <button id="back-to-chat">Kembali</button>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const cardContainer = document.getElementById('card-container');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const backToChat = document.getElementById('back-to-chat');
+        const chatMessages = document.getElementById('chat-messages');
+
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        backToChat.addEventListener('click', () => {
+            cardContainer.style.display = 'none';
+            chatContainer.style.display = 'flex';
+            messageInput.value = '';
+        });
+
+        function sendMessage() {
+            const message = messageInput.value.trim().toLowerCase();
+            if (message) {
+                addMessage(message, 'user');
+                messageInput.value = '';
+
+                if (message === 'selamat pagi') {
+                    setTimeout(() => {
+                        addMessage('Sedang menyiapkan kartu spesial untukmu...', 'bot');
+                        setTimeout(() => {
+                            chatContainer.style.display = 'none';
+                            cardContainer.style.display = 'flex';
+                        }, 500);
+                    }, 500);
+                }
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            messageElement.innerHTML = `<p>${text}</p>`;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>
